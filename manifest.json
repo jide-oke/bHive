@@ -6,7 +6,13 @@
   "permissions": ["tabs"],
   "host_permissions": ["http://localhost:3000/*"],
   "action": {
-    "default_title": "Open Viewer"
+    "default_title": "Open Viewer",
+    "default_icon": "bee.png"
+  },
+  "icons": {
+    "16": "bee.png",
+    "48": "bee.png",
+    "128": "bee.png"
   },
   "background": {
     "service_worker": "background.js"
