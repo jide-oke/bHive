@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
   const contentDiv = document.getElementById("content");
+  const addButton = document.getElementById("add-button");
+
+  addButton.addEventListener("click", () => {
+    window.location.href = "add.html";
+  });
 
   // Utility function to process special formatting (links, mailto links, and bold text)
   function formatText(text) {
@@ -16,6 +21,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     return text;
+  }
+
+  function renderResponses(responses) {
+    responses.forEach((entry) => {
+      const entryDiv = document.createElement("div");
+      entryDiv.className = "entry";
+
+      const title = document.createElement("div");
+      title.className = "title";
+      title.textContent = entry.title;
+
+      const content = document.createElement("div");
+      content.className = "content";
+
+      // Format text to include clickable links, mailto links, and bold text
+      content.innerHTML = formatText(entry.content);
+
+      entryDiv.appendChild(title);
+      entryDiv.appendChild(content);
+      contentDiv.appendChild(entryDiv);
+    });
   }
 
   // Fetch JSON data from the local server

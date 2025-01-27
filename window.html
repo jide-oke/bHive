@@ -20,10 +20,23 @@
       margin-top: 5px;
       white-space: pre-wrap;
     }
+    .add-button {
+      background-color: blue;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .add-button:hover {
+      background-color: darkblue;
+    }
   </style>
 </head>
 <body>
   <h1>JSON Viewer</h1>
+  <button id="add-button" class="add-button">+</button>
   <div id="content"></div>
   <script src="viewer.js"></script>
 </body>
