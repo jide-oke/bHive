@@ -32,6 +32,10 @@
     button:hover {
       background-color: darkblue;
     }
+    small {
+      font-size: 12px;
+      color: #666;
+    }
   </style>
 </head>
 <body>
@@ -44,6 +48,7 @@
     <div class="form-group">
       <label for="content">Content:</label>
       <textarea id="content" name="content" rows="10" required></textarea>
+      <small>Use markdown for links, e.g., [link text](https://example.com).</small>
     </div>
     <button type="submit">Save</button>
   </form>
