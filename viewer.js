@@ -1,3 +1,5 @@
+//This page is for how the content is viewed in the Chrome Extension. The main page as of right now
+
 document.addEventListener("DOMContentLoaded", () => {
   const contentDiv = document.getElementById("content");
   const addButton = document.getElementById("add-button");

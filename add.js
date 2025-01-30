@@ -1,18 +1,17 @@
 document.getElementById('add-response-form').addEventListener('submit', function (event) {
+
+  document.getElementById("content").addEventListener("input", function () {
+    const contentDiv = this;
+    contentDiv.innerHTML = contentDiv.innerHTML.replace(
+        /(https?:\/\/[^\s]+)/g, 
+        '<a href="$1" target="_blank">$1</a>'
+    );
+});
     event.preventDefault();
   
-    const title = document.getElementById('title').value;
-    const content = document.getElementById('content').value;
-  
-    // Add the response locally in chrome.storage.local
-    chrome.storage.local.get('responses', function (data) {
-      const responses = data.responses || [];
-      responses.push({ title, content });
-      chrome.storage.local.set({ responses }, function () {
-        console.log('Response saved locally.');
-      });
-    });
-  
+    const title = document.getElementById('title').innerHTML;
+    const content = document.getElementById('content').innerHTML;  // Capture rich text (including links). It used to be document.getElementById('content').value;
+
     // Send the new response to the server
     fetch('http://localhost:3000/json', {
       method: 'POST',
