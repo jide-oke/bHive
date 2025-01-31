@@ -1,5 +1,3 @@
-<!-- This page handles how the Add response page looks like -->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,16 +47,8 @@
     </div>
     <div class="form-group">
       <label for="content">Content:</label>
-      <div id="content" contenteditable="true" style="
-    width: 100%; 
-    min-height: 150px; 
-    padding: 10px; 
-    border: 1px solid #ccc; 
-    border-radius: 5px;
-    outline: none;
-    white-space: pre-wrap;
-    word-break: break-word;
-"></div>
+      <textarea id="content" name="content" rows="10" required></textarea>
+      <small>Use markdown for links, e.g., [link text](https://example.com).</small>
     </div>
     <button type="submit">Save</button>
   </form>

@@ -1,12 +1,4 @@
 document.getElementById('add-response-form').addEventListener('submit', function (event) {
-
-  document.getElementById("content").addEventListener("input", function () {
-    const contentDiv = this;
-    contentDiv.innerHTML = contentDiv.innerHTML.replace(
-        /(https?:\/\/[^\s]+)/g, 
-        '<a href="$1" target="_blank">$1</a>'
-    );
-});
     event.preventDefault();
   
     const title = document.getElementById('title').value;
