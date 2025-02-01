@@ -20,7 +20,12 @@
       margin-top: 5px;
       white-space: pre-wrap;
     }
-    .add-button {
+
+     /* Updated button styling to keep it fixed on the left */
+     #add-button {
+      position: fixed;  /* Fixes the button position */
+      left: 10px;  /* Positions it towards the left */
+      top: 20px;  /* Keeps it near the top */
       background-color: blue;
       color: white;
       border: none;
@@ -28,8 +33,10 @@
       font-size: 16px;
       cursor: pointer;
       border-radius: 5px;
+      z-index: 1000; /* Ensures it stays on top */
     }
-    .add-button:hover {
+
+    #add-button:hover {
       background-color: darkblue;
     }
   </style>
