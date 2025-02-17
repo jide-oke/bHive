@@ -16,55 +16,63 @@ document.addEventListener("DOMContentLoaded", function () {
           })
           .catch(error => console.error("Error fetching entry:", error));
   }
-});
 
-document.getElementById('add-response-form').addEventListener('submit', function (event) {
-  event.preventDefault();
+  // Handle form submission (Save)
+  document.getElementById('add-response-form').addEventListener('submit', function (event) {
+      event.preventDefault();
 
-  const title = document.getElementById('title').value;
-  const content = document.getElementById('content').innerHTML;
-  const tags = document.getElementById('tag').value
-               .split(",") // Convert input to an array
-               .map(tag => tag.trim()) 
-               .filter(tag => tag !== ""); 
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').innerHTML;
+      const tags = document.getElementById('tag').value
+                   .split(",")
+                   .map(tag => tag.trim()) 
+                   .filter(tag => tag !== ""); 
 
-  const entryIndex = document.getElementById("entry-index").value; // Get index if editing
+      const entryIndex = document.getElementById("entry-index").value;
 
-  if (entryIndex) {
-      // Update existing entry
-      fetch(`http://localhost:3000/json`, {
-          method: 'PUT', // Use PUT for updating
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ index: entryIndex, title, content, tags }),
-      })
-      .then(response => {
-          if (response.ok) {
-              console.log('Entry updated successfully.');
-              window.location.href = 'window.html'; // Navigate back
-          } else {
-              console.error('Failed to update entry.');
-          }
-      })
-      .catch(error => console.error('Error:', error));
-  } else {
-      // Create new entry
-      fetch('http://localhost:3000/json', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ title, content, tags }),
-      })
-      .then(response => {
-          if (response.ok) {
-              console.log('Entry created successfully.');
-              window.location.href = 'window.html'; // Navigate back
-          } else {
-              console.error('Failed to create entry.');
-          }
-      })
-      .catch(error => console.error('Error:', error));
-  }
+      if (entryIndex) {
+          // Update existing entry
+          fetch(`http://localhost:3000/json`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ index: entryIndex, title, content, tags }),
+          })
+          .then(response => {
+              if (response.ok) {
+                  console.log('Entry updated successfully.');
+                  window.location.href = 'window.html';
+              } else {
+                  console.error('Failed to update entry.');
+              }
+          })
+          .catch(error => console.error('Error:', error));
+      }
+  });
+
+  // Handle Delete Button Click
+  document.getElementById('delete-button').addEventListener('click', function () {
+      const entryIndex = document.getElementById("entry-index").value;
+      if (!entryIndex) return; // No entry to delete
+
+      if (confirm("Are you sure you want to delete this entry?")) {
+          fetch(`http://localhost:3000/json`, {
+              method: 'DELETE',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ index: entryIndex }),
+          })
+          .then(response => {
+              if (response.ok) {
+                  console.log('Entry deleted successfully.');
+                  window.location.href = 'window.html'; // Go back to the main view
+              } else {
+                  console.error('Failed to delete entry.');
+              }
+          })
+          .catch(error => console.error('Error:', error));
+      }
+  });
 });

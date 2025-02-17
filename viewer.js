@@ -59,12 +59,53 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 }
 
+function renderTagList(responses) {
+  const tagListDiv = document.getElementById("tag-list");
+  tagListDiv.innerHTML = ""; // Clear previous tags
+
+  const tagCounts = {}; // Object to store tag counts
+
+  responses.forEach((entry) => {
+    if (entry.tags && Array.isArray(entry.tags)) {
+      entry.tags.forEach((tag) => {
+        tag = tag.trim(); // Normalize spacing
+        if (tagCounts[tag]) {
+          tagCounts[tag]++; // Increase count if tag exists
+        } else {
+          tagCounts[tag] = 1; // Initialize count
+        }
+      });
+    }
+  });
+
+  // Convert object to an array and sort by count (highest first)
+  const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+
+  // Create a list of tags with counts
+  sortedTags.forEach(([tag, count]) => {
+    const tagItem = document.createElement("div");
+    tagItem.textContent = `${count} - ${tag}`;
+    tagItem.style.cursor = "pointer";
+    tagItem.style.padding = "5px";
+    tagItem.style.borderBottom = "1px solid #ccc";
+
+    // Add click event to filter by tag when clicked
+    tagItem.addEventListener("click", () => {
+      tagSearch.value = tag; // Fill search input with selected tag
+      tagSearch.dispatchEvent(new Event("input")); // Trigger search
+    });
+
+    tagListDiv.appendChild(tagItem);
+  });
+}
+
   // Fetch JSON data from the local server
   fetch("http://localhost:3000/json")
     .then((response) => response.json())
     .then((data) => {
       allResponses = data.responses; // Store all responses
       renderResponses(allResponses);
+      renderTagList(allResponses);
     })
     .catch((error) => {
       console.error("Error fetching JSON:", error);
