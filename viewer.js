@@ -1,4 +1,4 @@
-//This page is for how the content is viewed in the Chrome Extension. The main page as of right now
+// This page is for how the content is viewed in the Chrome Extension. The main page as of right now
 
 document.addEventListener("DOMContentLoaded", () => {
   const contentDiv = document.getElementById("content");
@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return text;
   }
 
+  // Updated function to include tag rendering
   function renderResponses(responses) {
     responses.forEach((entry) => {
       const entryDiv = document.createElement("div");
@@ -36,12 +37,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const content = document.createElement("div");
       content.className = "content";
-
-      // Format text to include clickable links, mailto links, and bold text
       content.innerHTML = formatText(entry.content);
+
+      const tag = document.createElement("div");
+      tag.className = "tag";
+      tag.textContent = `Tag: ${entry.tag || "No Tag"}`; // Display tag (fallback if no tag)
 
       entryDiv.appendChild(title);
       entryDiv.appendChild(content);
+      entryDiv.appendChild(tag);
       contentDiv.appendChild(entryDiv);
     });
   }
@@ -50,25 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("http://localhost:3000/json")
     .then((response) => response.json())
     .then((data) => {
-      // Render the JSON data
-      data.responses.forEach((entry) => {
-        const entryDiv = document.createElement("div");
-        entryDiv.className = "entry";
-
-        const title = document.createElement("div");
-        title.className = "title";
-        title.textContent = entry.title;
-
-        const content = document.createElement("div");
-        content.className = "content";
-
-        // Format text to include clickable links, mailto links, and bold text
-        content.innerHTML = formatText(entry.content);
-
-        entryDiv.appendChild(title);
-        entryDiv.appendChild(content);
-        contentDiv.appendChild(entryDiv);
-      });
+      // Render the JSON data including tags
+      renderResponses(data.responses);
     })
     .catch((error) => {
       console.error("Error fetching JSON:", error);
