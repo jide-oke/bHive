@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderResponses(responses) {
     contentDiv.innerHTML = ""; // Clear previous content
 
-    responses.forEach((entry) => {
+    responses.forEach((entry, index) => {
         const entryDiv = document.createElement("div");
         entryDiv.className = "entry";
 
@@ -42,9 +42,19 @@ document.addEventListener("DOMContentLoaded", () => {
         tag.className = "tag";
         tag.textContent = `Tags: ${entry.tags ? entry.tags.join(", ") : "No Tags"}`;
 
+        // Create Edit Button
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.style.marginTop = "10px";
+        editButton.addEventListener("click", () => {
+            // Navigate to add.html but in edit mode
+            window.location.href = `add.html?index=${index}`;
+        });
+
         entryDiv.appendChild(title);
         entryDiv.appendChild(content);
         entryDiv.appendChild(tag);
+        entryDiv.appendChild(editButton);
         contentDiv.appendChild(entryDiv);
     });
 }

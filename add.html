@@ -43,10 +43,13 @@
 <body>
   <h1>Add a New Response</h1>
   <form id="add-response-form">
+    <input type="hidden" id="entry-index" /> <!-- Hidden field for entry index -->
+
     <div class="form-group">
       <label for="title">Title:</label>
       <input type="text" id="title" name="title" required />
     </div>
+    
     <div class="form-group">
       <label for="content">Content:</label>
       <div id="content" contenteditable="true" style="
