@@ -5,8 +5,51 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      margin: 0;
+      display: flex; /* Makes the sidebar and content area sit side by side */
+      height: 100vh; /* Ensures full height */
     }
+
+    /* Sidebar styles */
+    .sidebar {
+      width: 80px; /* Adjust width as needed */
+      background-color: #f0f0f0; /* Light gray background */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000; /* Ensures it stays on top */
+      border-right: 2px solid #ccc; /* Vertical divider */
+    }
+
+    /* Style for the Add button inside the sidebar */
+    #add-button {
+      background-color: blue;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    #add-button:hover {
+      background-color: darkblue;
+    }
+
+    /* Main content area */
+    .content-container {
+      margin-left: 100px; /* Pushes content to the right */
+      padding: 20px;
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
     .entry {
       margin-bottom: 20px;
       border-bottom: 1px solid #ccc;
@@ -20,31 +63,17 @@
       margin-top: 5px;
       white-space: pre-wrap;
     }
-
-     /* Updated button styling to keep it fixed on the left */
-     #add-button {
-      position: fixed;  /* Fixes the button position */
-      left: 10px;  /* Positions it towards the left */
-      top: 20px;  /* Keeps it near the top */
-      background-color: blue;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-      z-index: 1000; /* Ensures it stays on top */
-    }
-
-    #add-button:hover {
-      background-color: darkblue;
-    }
   </style>
 </head>
 <body>
-  <h1>JSON Viewer</h1>
-  <button id="add-button" class="add-button">+</button>
-  <div id="content"></div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button id="add-button">+</button>
+  </div>
+
+  <!-- Main content -->
+  <div class="content-container" id="content"></div>
+
   <script src="viewer.js"></script>
 </body>
 </html>
