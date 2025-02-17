@@ -11,7 +11,10 @@ document.getElementById('add-response-form').addEventListener('submit', function
 
   const title = document.getElementById('title').value;
   const content = document.getElementById('content').innerHTML;  // Capture rich text (including links). It used to be document.getElementById('content').value;
-  const tag = document.getElementById('tag').value;  // Capture tag input
+  const tags = document.getElementById('tag').value
+                 .split(",") // Split input into an array
+                 .map(tag => tag.trim()) // Remove extra spaces
+                 .filter(tag => tag !== ""); // Remove empty entries
 
   // Send the new response to the server with tag included
   fetch('http://localhost:3000/json', {
@@ -19,7 +22,7 @@ document.getElementById('add-response-form').addEventListener('submit', function
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, content, tag }), // Include tag in the JSON payload
+    body: JSON.stringify({ title, content, tags }), // // Store tags as an array
   })
   .then((response) => {
     console.log('Response Status:', response.status); // Log status code
