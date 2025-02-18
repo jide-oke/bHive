@@ -31,24 +31,42 @@ document.addEventListener("DOMContentLoaded", function () {
       const entryIndex = document.getElementById("entry-index").value;
 
       if (entryIndex) {
-          // Update existing entry
-          fetch(`http://localhost:3000/json`, {
-              method: 'PUT',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ index: entryIndex, title, content, tags }),
-          })
-          .then(response => {
-              if (response.ok) {
-                  console.log('Entry updated successfully.');
-                  window.location.href = 'window.html';
-              } else {
-                  console.error('Failed to update entry.');
-              }
-          })
-          .catch(error => console.error('Error:', error));
-      }
+        // Update existing entry
+        fetch(`http://localhost:3000/json`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ index: entryIndex, title, content, tags }),
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Entry updated successfully.');
+                window.location.href = 'window.html';
+            } else {
+                console.error('Failed to update entry.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+        // Create new entry
+        fetch(`http://localhost:3000/json`, {
+            method: 'POST', // Use POST for new entries
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title, content, tags }),
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('New entry created successfully.');
+                window.location.href = 'window.html';
+            } else {
+                console.error('Failed to create new entry.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
   });
 
   // Handle Delete Button Click
