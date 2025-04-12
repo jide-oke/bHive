@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         editButton.style.marginTop = "10px";
         editButton.addEventListener("click", () => {
             // Navigate to add.html but in edit mode
-            window.location.href = `add.html?index=${index}`;
+            window.location.href = `add.html?id=${entry._id}`;
         });
 
         entryDiv.appendChild(title);
@@ -100,7 +100,7 @@ function renderTagList(responses) {
 }
 
   // Fetch JSON data from the local server
-  fetch("http://localhost:3000/json")
+  fetch("http://localhost:3001/json")
     .then((response) => response.json())
     .then((data) => {
       allResponses = data.responses; // Store all responses
