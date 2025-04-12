@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const entryId = urlParams.get("id");
   
-    if (entryIndex !== null) {
+    if (entryId !== null) {
         // Edit Mode: Fetch the existing entry data
         fetch("http://localhost:3001/json")
             .then(response => response.json())
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle Delete Button Click
     document.getElementById('delete-button').addEventListener('click', function () {
         const entryId = document.getElementById("entry-id").value;
-        if (!entryIndex) return; // No entry to delete
+        if (!entryId) return; // No entry to delete
   
         if (confirm("Are you sure you want to delete this entry?")) {
             fetch(`http://localhost:3001/json`, {
