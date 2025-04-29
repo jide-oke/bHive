@@ -104,14 +104,16 @@ function renderTagList(responses) {
     .then((response) => response.json())
     .then((data) => {
       allResponses = data.responses; // Store all responses
-      renderResponses(allResponses);
-      renderTagList(allResponses);
+
       // Sort newest first by _id
       allResponses.sort((a, b) => {
         if (a._id < b._id) return 1;
         if (a._id > b._id) return -1;
         return 0;
       });
+
+      renderResponses(allResponses);
+      renderTagList(allResponses);
 
     })
     .catch((error) => {
