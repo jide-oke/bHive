@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "JSON Viewer Extension",
+  "name": "bHive",
   "version": "1.0",
   "description": "View JSON file entries in a user-friendly format.",
   "permissions": ["tabs", "storage", "activeTab"],
