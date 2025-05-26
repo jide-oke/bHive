@@ -3,8 +3,8 @@
   "name": "bHive",
   "version": "1.0",
   "description": "View JSON file entries in a user-friendly format.",
-  "permissions": ["tabs", "storage", "activeTab"],
-  "host_permissions": ["http://localhost:3001/*"],
+  "permissions": ["tabs", "storage", "activeTab", "scripting"],
+  "host_permissions": ["http://localhost:3001/*", "https://getclever.lightning.force.com/*"],
   "action": {
     "default_title": "Open Viewer",
     "default_icon": "bee.png"
