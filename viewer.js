@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const addButton = document.getElementById("add-button");
   const tagSearch = document.getElementById("tag-search");
   let allResponses = [];
+  const contentSearch = document.getElementById("content-search");
 
   
 
@@ -214,20 +215,28 @@ document.addEventListener("keydown", function (e) {
       contentDiv.textContent = "Failed to load data.";
     });
 
-  tagSearch.addEventListener("input", function () {
-    const searchValue = tagSearch.value.trim().toLowerCase();
+  tagSearch.addEventListener("input", filterAndRender);
+contentSearch.addEventListener("input", filterAndRender);
 
-    if (searchValue === "") {
-        renderResponses(allResponses);
-        return;
-    }
+function filterAndRender() {
+  const tagValue = tagSearch.value.trim().toLowerCase();
+  const contentValue = contentSearch.value.trim().toLowerCase();
 
-    const searchTags = searchValue.split(",").map(tag => tag.trim().toLowerCase());
+  let filtered = allResponses;
 
-    const filteredResponses = allResponses.filter((entry) => 
-        entry.tags && entry.tags.some(tag => searchTags.includes(tag.toLowerCase()))
+  if (tagValue !== "") {
+    const searchTags = tagValue.split(",").map(tag => tag.trim().toLowerCase());
+    filtered = filtered.filter(entry =>
+      entry.tags && entry.tags.some(tag => searchTags.includes(tag.toLowerCase()))
     );
+  }
 
-    renderResponses(filteredResponses);
-  });
+  if (contentValue !== "") {
+    filtered = filtered.filter(entry =>
+      entry.content && entry.content.toLowerCase().includes(contentValue)
+    );
+  }
+
+  renderResponses(filtered);
+}
 });
