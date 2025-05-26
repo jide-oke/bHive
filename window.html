@@ -6,14 +6,12 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      display: flex; /* Makes the sidebar and content area sit side by side */
-      height: 100vh; /* Ensures full height */
+      display: flex;
+      height: 100vh;
     }
-
-    /* Sidebar styles */
     .sidebar {
-      width: 80px; /* Adjust width as needed */
-      background-color: #f0f0f0; /* Light gray background */
+      width: 80px;
+      background-color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -22,11 +20,9 @@
       left: 0;
       top: 0;
       bottom: 0;
-      z-index: 1000; /* Ensures it stays on top */
-      border-right: 2px solid #ccc; /* Vertical divider */
+      z-index: 1000;
+      border-right: 2px solid #ccc;
     }
-
-    /* Style for the Add button inside the sidebar */
     #add-button {
       background-color: blue;
       color: white;
@@ -37,19 +33,26 @@
       border-radius: 5px;
       margin-bottom: 20px;
     }
-
     #add-button:hover {
       background-color: darkblue;
     }
-
-    /* Main content area */
+    /* Scope button style */
+    #scope-shortcut {
+      background: #4a90e2;
+      color: #fff;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      cursor: pointer;
+    }
     .content-container {
-      margin-left: 100px; /* Pushes content to the right */
+      margin-left: 100px;
       padding: 20px;
       flex-grow: 1;
       overflow-y: auto;
     }
-
     .entry {
       margin-bottom: 20px;
       border-bottom: 1px solid #ccc;
@@ -79,6 +82,8 @@
       " />
   
       <button id="add-button">+</button>
+      <!-- NEW SCOPE SHORTCUT BUTTON -->
+      <button id="scope-shortcut">Scope</button>
 
       <div id="tag-list" style="
     width: 100%;
@@ -86,12 +91,10 @@
     padding: 10px;
     font-size: 14px;
   "></div>
-
     </div>
 
   <!-- Main content -->
   <div class="content-container" id="content"></div>
-
   <script src="viewer.js"></script>
 </body>
 </html>

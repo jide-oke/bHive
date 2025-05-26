@@ -1,7 +1,55 @@
 // scope.js
 document.addEventListener('DOMContentLoaded', function () {
-  // Only run this on the Add Response page
+  const contentEditableDiv = document.getElementById('content');
   const scopeBtn = document.getElementById('scopeBtn');
+
+  // Auto-populate if session content exists and came from the shortcut
+  const sessionContent = sessionStorage.getItem("scopedSalesforceContent");
+  if (sessionContent && window.location.search.includes("scoped=1")) {
+    const data = JSON.parse(sessionContent);
+    let rawInput = data.html;
+    const parser = new DOMParser();
+
+    function decodeHTMLEntities(str) {
+      const txt = document.createElement('textarea');
+      txt.innerHTML = str;
+      return txt.value;
+    }
+    rawInput = decodeHTMLEntities(rawInput);
+
+    let htmlString = rawInput;
+    const marker = 'value="';
+    const start = rawInput.indexOf(marker);
+    if (start !== -1) {
+      const i1 = start + marker.length;
+      const i2 = rawInput.lastIndexOf('">');
+      htmlString = (i2 > i1)
+        ? rawInput.substring(i1, i2)
+        : rawInput.substring(i1);
+    }
+    htmlString = decodeHTMLEntities(htmlString);
+    const contentDoc = parser.parseFromString(htmlString, 'text/html');
+
+    contentDoc.querySelectorAll('img').forEach(img => {
+      let src = decodeHTMLEntities(img.getAttribute('src') || '');
+      if (src.startsWith('/')) {
+        src = 'https://getclever.my.salesforce.com' + src;
+      }
+      img.setAttribute('src', src);
+      img.style.maxWidth = "100%";
+      img.style.display = "block";
+      img.style.marginBottom = "12px";
+    });
+
+    contentDoc.querySelectorAll('br[clear="none"]').forEach(br => {
+      const newBr = document.createElement('br');
+      br.parentNode.replaceChild(newBr, br);
+    });
+
+    contentEditableDiv.innerHTML = contentDoc.body.innerHTML;
+    sessionStorage.removeItem("scopedSalesforceContent");
+  }
+
   if (!scopeBtn) return;
 
   scopeBtn.addEventListener('click', async () => {
@@ -43,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
           const messageItems = Array.from(olElement.querySelectorAll('li'));
           for (const li of messageItems) {
-            // Email message
             const wrapper = li.querySelector('div.emailMessageBody');
             if (wrapper) {
               const rich = wrapper.querySelector('emailui-rich-text-output');
@@ -54,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
               }
             }
-            // Internal note
             const noteDiv = li.querySelector('div.cuf-feedBodyText.forceChatterMessageSegments.forceChatterFeedBodyText');
             if (noteDiv) {
               const feedBodyInner = noteDiv.querySelector('div.feedBodyInner.Desktop.oneApp');
@@ -84,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let rawInput = data.html;
         const parser = new DOMParser();
 
-        // HTML entity decode
         function decodeHTMLEntities(str) {
           const txt = document.createElement('textarea');
           txt.innerHTML = str;
@@ -92,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         rawInput = decodeHTMLEntities(rawInput);
 
-        // Special handling for <emailui-rich-text-output value="...">
         let htmlString = rawInput;
         const marker = 'value="';
         const start = rawInput.indexOf(marker);
@@ -106,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
         htmlString = decodeHTMLEntities(htmlString);
         const contentDoc = parser.parseFromString(htmlString, 'text/html');
 
-        // Fix Salesforce relative image links
         contentDoc.querySelectorAll('img').forEach(img => {
           let src = decodeHTMLEntities(img.getAttribute('src') || '');
           if (src.startsWith('/')) {
@@ -118,14 +161,11 @@ document.addEventListener('DOMContentLoaded', function () {
           img.style.marginBottom = "12px";
         });
 
-        // Fix <br clear="none">
         contentDoc.querySelectorAll('br[clear="none"]').forEach(br => {
           const newBr = document.createElement('br');
           br.parentNode.replaceChild(newBr, br);
         });
 
-        // Paste HTML into the contenteditable div
-        const contentEditableDiv = document.getElementById('content');
         contentEditableDiv.innerHTML = contentDoc.body.innerHTML;
       } else {
         alert(rawResult);

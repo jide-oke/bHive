@@ -1,13 +1,100 @@
 document.addEventListener("DOMContentLoaded", () => {
   const contentDiv = document.getElementById("content");
   const addButton = document.getElementById("add-button");
-  const tagSearch = document.getElementById("tag-search"); // Get search input field
-
-  let allResponses = []; // Store all responses for filtering
+  const tagSearch = document.getElementById("tag-search");
+  let allResponses = [];
 
   addButton.addEventListener("click", () => {
     window.location.href = "add.html";
   });
+
+  // SCOPE SHORTCUT BUTTON LOGIC
+  const scopeShortcutBtn = document.getElementById("scope-shortcut");
+  if (scopeShortcutBtn) {
+    scopeShortcutBtn.addEventListener("click", async () => {
+      scopeShortcutBtn.textContent = "⏳ Scoping...";
+
+      // 1. Find Salesforce tab
+      const [sfTab] = await chrome.tabs.query({
+        url: "https://getclever.lightning.force.com/lightning/*"
+      });
+
+      if (!sfTab) {
+        alert("⚠️ No active Salesforce Lightning tab found.");
+        scopeShortcutBtn.textContent = "Scope";
+        return;
+      }
+
+      await chrome.tabs.update(sfTab.id, { active: true });
+
+      // 2. Run the content scraping code
+      chrome.scripting.executeScript({
+        target: { tabId: sfTab.id },
+        func: () => {
+          try {
+            const visibleViewport = document.querySelector(
+              'body.desktop > div.desktop.container.forceStyle.oneOne.navexDesktopLayoutContainer.lafAppLayoutHost.forceAccess > div.viewport[aria-hidden="false"]'
+            );
+            if (!visibleViewport) return '❌ Could not find visible viewport container.';
+
+            const tabPanel = visibleViewport.querySelector(
+              'section.layoutContent.stage.panelSlide.hasFixedFooter > ' +
+              'div.workspaceManager.navexWorkspaceManager > ' +
+              'div.oneConsoleTabset.navexConsoleTabset > ' +
+              'div.tabsetBody.main-content.mainContentMark.fullheight.active.fullRight > ' +
+              'div.split-right > ' +
+              'section.tabContent.active.oneConsoleTab[aria-expanded="true"]'
+            );
+            if (!tabPanel) return '❌ Active case tab not found.';
+
+            const olElement = tabPanel.querySelector('ol');
+            if (!olElement) return '❌ No <ol> found in active tab.';
+
+            const messageItems = Array.from(olElement.querySelectorAll('li'));
+            for (const li of messageItems) {
+              const wrapper = li.querySelector('div.emailMessageBody');
+              if (wrapper) {
+                const rich = wrapper.querySelector('emailui-rich-text-output');
+                if (rich) {
+                  return JSON.stringify({
+                    type: "email",
+                    html: rich.outerHTML
+                  });
+                }
+              }
+              const noteDiv = li.querySelector('div.cuf-feedBodyText.forceChatterMessageSegments.forceChatterFeedBodyText');
+              if (noteDiv) {
+                const feedBodyInner = noteDiv.querySelector('div.feedBodyInner.Desktop.oneApp');
+                if (feedBodyInner) {
+                  return JSON.stringify({
+                    type: "internalNote",
+                    html: feedBodyInner.innerHTML
+                  });
+                }
+              }
+            }
+            return '❌ No known message type found in recent items.';
+          } catch (err) {
+            return '🚨 Error: ' + err.message;
+          }
+        }
+      }, (results) => {
+        scopeShortcutBtn.textContent = "Scope";
+        if (chrome.runtime.lastError || !results || !results[0]) {
+          alert("🚫 Failed to extract content.");
+          return;
+        }
+        const rawResult = results[0].result;
+        if (rawResult && rawResult.startsWith("{")) {
+          // Store the result in sessionStorage so add.html can read it!
+          sessionStorage.setItem("scopedSalesforceContent", rawResult);
+          window.location.href = "add.html?scoped=1";
+        } else {
+          alert(rawResult);
+        }
+      });
+    });
+  }
 
   function formatText(text) {
     const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\)]+|mailto:[^\)]+)\)/g;
@@ -24,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderResponses(responses) {
-    contentDiv.innerHTML = ""; // Clear previous content
+    contentDiv.innerHTML = "";
 
     responses.forEach((entry, index) => {
         const entryDiv = document.createElement("div");
@@ -42,12 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
         tag.className = "tag";
         tag.textContent = `Tags: ${entry.tags ? entry.tags.join(", ") : "No Tags"}`;
 
-        // Create Edit Button
         const editButton = document.createElement("button");
         editButton.textContent = "Edit";
         editButton.style.marginTop = "10px";
         editButton.addEventListener("click", () => {
-            // Navigate to add.html but in edit mode
             window.location.href = `add.html?id=${entry._id}`;
         });
 
@@ -57,55 +142,49 @@ document.addEventListener("DOMContentLoaded", () => {
         entryDiv.appendChild(editButton);
         contentDiv.appendChild(entryDiv);
     });
-}
+  }
 
-function renderTagList(responses) {
-  const tagListDiv = document.getElementById("tag-list");
-  tagListDiv.innerHTML = ""; // Clear previous tags
+  function renderTagList(responses) {
+    const tagListDiv = document.getElementById("tag-list");
+    tagListDiv.innerHTML = "";
 
-  const tagCounts = {}; // Object to store tag counts
+    const tagCounts = {};
 
-  responses.forEach((entry) => {
-    if (entry.tags && Array.isArray(entry.tags)) {
-      entry.tags.forEach((tag) => {
-        tag = tag.trim(); // Normalize spacing
-        if (tagCounts[tag]) {
-          tagCounts[tag]++; // Increase count if tag exists
-        } else {
-          tagCounts[tag] = 1; // Initialize count
-        }
-      });
-    }
-  });
-
-  // Convert object to an array and sort by count (highest first)
-  const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
-
-  // Create a list of tags with counts
-  sortedTags.forEach(([tag, count]) => {
-    const tagItem = document.createElement("div");
-    tagItem.textContent = `${count} - ${tag}`;
-    tagItem.style.cursor = "pointer";
-    tagItem.style.padding = "5px";
-    tagItem.style.borderBottom = "1px solid #ccc";
-
-    // Add click event to filter by tag when clicked
-    tagItem.addEventListener("click", () => {
-      tagSearch.value = tag; // Fill search input with selected tag
-      tagSearch.dispatchEvent(new Event("input")); // Trigger search
+    responses.forEach((entry) => {
+      if (entry.tags && Array.isArray(entry.tags)) {
+        entry.tags.forEach((tag) => {
+          tag = tag.trim();
+          if (tagCounts[tag]) {
+            tagCounts[tag]++;
+          } else {
+            tagCounts[tag] = 1;
+          }
+        });
+      }
     });
 
-    tagListDiv.appendChild(tagItem);
-  });
-}
+    const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 
-  // Fetch JSON data from the local server
+    sortedTags.forEach(([tag, count]) => {
+      const tagItem = document.createElement("div");
+      tagItem.textContent = `${count} - ${tag}`;
+      tagItem.style.cursor = "pointer";
+      tagItem.style.padding = "5px";
+      tagItem.style.borderBottom = "1px solid #ccc";
+      tagItem.addEventListener("click", () => {
+        tagSearch.value = tag;
+        tagSearch.dispatchEvent(new Event("input"));
+      });
+
+      tagListDiv.appendChild(tagItem);
+    });
+  }
+
   fetch("http://localhost:3001/json")
     .then((response) => response.json())
     .then((data) => {
-      allResponses = data.responses; // Store all responses
+      allResponses = data.responses;
 
-      // Sort newest first by _id
       allResponses.sort((a, b) => {
         if (a._id < b._id) return 1;
         if (a._id > b._id) return -1;
@@ -121,12 +200,11 @@ function renderTagList(responses) {
       contentDiv.textContent = "Failed to load data.";
     });
 
-  // Add event listener for tag search
   tagSearch.addEventListener("input", function () {
     const searchValue = tagSearch.value.trim().toLowerCase();
 
     if (searchValue === "") {
-        renderResponses(allResponses); // Show all if search is empty
+        renderResponses(allResponses);
         return;
     }
 
@@ -137,5 +215,5 @@ function renderTagList(responses) {
     );
 
     renderResponses(filteredResponses);
-});
+  });
 });
