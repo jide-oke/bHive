@@ -4,12 +4,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const tagSearch = document.getElementById("tag-search");
   let allResponses = [];
 
+  
+
   addButton.addEventListener("click", () => {
     window.location.href = "add.html";
   });
 
   // SCOPE SHORTCUT BUTTON LOGIC
   const scopeShortcutBtn = document.getElementById("scope-shortcut");
+
+document.addEventListener("keydown", function (e) {
+  if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'j') {
+    if (scopeShortcutBtn && !scopeShortcutBtn.disabled) {
+      e.preventDefault();
+      scopeShortcutBtn.click();
+    }
+  }
+});
+
   if (scopeShortcutBtn) {
     scopeShortcutBtn.addEventListener("click", async () => {
       scopeShortcutBtn.textContent = "⏳ Scoping...";
@@ -95,6 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  
 
   function formatText(text) {
     const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\)]+|mailto:[^\)]+)\)/g;
