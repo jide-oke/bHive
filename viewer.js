@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scopeShortcutBtn = document.getElementById("scope-shortcut");
 
 document.addEventListener("keydown", function (e) {
-  if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'j') {
+  if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'i') {
     if (scopeShortcutBtn && !scopeShortcutBtn.disabled) {
       e.preventDefault();
       scopeShortcutBtn.click();
