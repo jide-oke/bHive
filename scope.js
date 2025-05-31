@@ -1,4 +1,5 @@
-// scope.js
+// this page controls the 'scraper' or 'scope' function: scraping responses from SFDC and displaying it in the extension response window
+
 document.addEventListener('DOMContentLoaded', function () {
   const contentEditableDiv = document.getElementById('content');
   const scopeBtn = document.getElementById('scopeBtn');
@@ -47,6 +48,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     contentEditableDiv.innerHTML = contentDoc.body.innerHTML;
+
+    
+
     sessionStorage.removeItem("scopedSalesforceContent");
   }
 
@@ -167,6 +171,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         contentEditableDiv.innerHTML = contentDoc.body.innerHTML;
+
+        
       } else {
         alert(rawResult);
       }

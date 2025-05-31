@@ -1,4 +1,4 @@
-// background.js
+// This page controls how the Chrome Extension is launched. This page is small but important.
 
 let bhiveWindowId = null;
 

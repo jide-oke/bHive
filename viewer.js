@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const contentSearch = document.getElementById("content-search");
 
   
-
+  // ADD Button
   addButton.addEventListener("click", () => {
     window.location.href = "add.html";
   });
 
   // SCOPE SHORTCUT BUTTON LOGIC
   const scopeShortcutBtn = document.getElementById("scope-shortcut");
-
+// Scope Shortcut
 document.addEventListener("keydown", function (e) {
   if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'i') {
     if (scopeShortcutBtn && !scopeShortcutBtn.disabled) {

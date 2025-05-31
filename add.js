@@ -1,3 +1,5 @@
+//This page controls how a response is added to the MongoDB via Node & HTTPS Requests
+
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const entryId = urlParams.get("id");
