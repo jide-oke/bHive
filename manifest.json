@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "bHive",
-  "version": "1.0",
+  "name": "Plus One",
+  "version": "1.9",
   "description": "View JSON file entries in a user-friendly format.",
   "permissions": ["tabs", "storage", "activeTab", "scripting"],
   "host_permissions": ["http://localhost:3001/*", "https://getclever.lightning.force.com/*"],
