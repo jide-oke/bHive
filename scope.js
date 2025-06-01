@@ -80,6 +80,12 @@ if (tagInput && !tagInput.value.trim()) {
   tagInput.value = 'Null';
 }
 
+// --- AUTO-SAVE SECTION ---
+const form = document.getElementById('add-response-form');
+if (form) {
+  form.requestSubmit();
+}
+
     sessionStorage.removeItem("scopedSalesforceContent");
   }
 
@@ -219,6 +225,12 @@ if (titleInput && !titleInput.value.trim()) {
 }
 if (tagInput && !tagInput.value.trim()) {
   tagInput.value = 'Null';
+}
+
+// --- AUTO-SAVE SECTION ---
+const form = document.getElementById('add-response-form');
+if (form) {
+  form.requestSubmit();
 }
       } else {
         alert(rawResult);
