@@ -71,7 +71,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     contentEditableDiv.innerHTML = removeDuplicateLineBreaks(contentDoc.body.innerHTML);
 
-    
+    const titleInput = document.getElementById('title');
+const tagInput = document.getElementById('tag');
+if (titleInput && !titleInput.value.trim()) {
+  titleInput.value = 'Null';
+}
+if (tagInput && !tagInput.value.trim()) {
+  tagInput.value = 'Null';
+}
 
     sessionStorage.removeItem("scopedSalesforceContent");
   }
@@ -205,7 +212,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         contentEditableDiv.innerHTML = removeDuplicateLineBreaks(contentDoc.body.innerHTML);
 
-        
+        const titleInput = document.getElementById('title');
+const tagInput = document.getElementById('tag');
+if (titleInput && !titleInput.value.trim()) {
+  titleInput.value = 'Null';
+}
+if (tagInput && !tagInput.value.trim()) {
+  tagInput.value = 'Null';
+}
       } else {
         alert(rawResult);
       }
