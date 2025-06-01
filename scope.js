@@ -57,6 +57,18 @@ document.addEventListener('DOMContentLoaded', function () {
       br.parentNode.replaceChild(newBr, br);
     });
 
+    // Remove everything after the signature logo (and the logo itself)
+        const sigImg = contentDoc.querySelector('img[src="https://assets.clever.com/website/content/originals/clever-logo.png"]');
+        if (sigImg) {
+          // Remove everything after the signature image in the parent node
+          let node = sigImg;
+          while (node && node.nextSibling) {
+            node.parentNode.removeChild(node.nextSibling);
+          }
+          // Optionally, remove the signature image itself too:
+          node.parentNode.removeChild(sigImg);
+        }
+
     contentEditableDiv.innerHTML = removeDuplicateLineBreaks(contentDoc.body.innerHTML);
 
     
@@ -180,7 +192,17 @@ document.addEventListener('DOMContentLoaded', function () {
           const newBr = document.createElement('br');
           br.parentNode.replaceChild(newBr, br);
         });
-
+        // Remove everything after the signature logo (and the logo itself)
+        const sigImg = contentDoc.querySelector('img[src="https://assets.clever.com/website/content/originals/clever-logo.png"]');
+        if (sigImg) {
+          // Remove everything after the signature image in the parent node
+          let node = sigImg;
+          while (node && node.nextSibling) {
+            node.parentNode.removeChild(node.nextSibling);
+          }
+          // Optionally, remove the signature image itself too:
+          node.parentNode.removeChild(sigImg);
+        }
         contentEditableDiv.innerHTML = removeDuplicateLineBreaks(contentDoc.body.innerHTML);
 
         
