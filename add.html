@@ -1,4 +1,8 @@
-<!-- This page handles how the Add response page looks like -->
+<!--
+add.html
+----------
+Purpose: The Add Response page. Responsible for displaying a form that allows users to create or edit a response entry (title, content, tags). Integrates with add.js for save/delete actions and scope.js for Salesforce content scraping.
+-->
 
 <!DOCTYPE html>
 <html>
@@ -52,6 +56,7 @@
     
     <div class="form-group">
       <label for="content">Content:</label>
+      <!-- Scope Salesforce button triggers scraping (see scope.js) -->
 <div style="margin-bottom:10px;">
   <button type="button" id="scopeBtn" style="background:#4a90e2;color:#fff;padding:8px 16px;border:none;border-radius:6px;font-size:14px;cursor:pointer;">
     Scope Salesforce
@@ -69,18 +74,16 @@
 "></div>
     </div>
 
- <!-- ADD THIS BLOCK -->
+ <!-- Tag input for categorizing responses -->
  <div class="form-group">
   <label for="tag">Tags (comma-separated):</label>
   <input type="text" id="tag" name="tag" placeholder="Enter tags (e.g., Support, Inquiry, General)" required />
   <small>Separate multiple tags with a comma</small>
 </div>
-<!-- END OF ADDITION -->
-
     <button type="submit">Save</button>
     <button type="button" id="delete-button" style="background-color: red; margin-left: 10px;">Delete</button>
   </form>
-  <!-- Link to the external script file -->
+ <!-- Main logic in add.js and scope.js -->
   <script src="add.js"></script>
   <script src="scope.js"></script>
 </body>

@@ -1,12 +1,22 @@
-// this page controls the 'scraper' or 'scope' function: scraping responses from SFDC and displaying it in the extension response window
+// scope.js
+// ----------
+// Purpose: Handles scraping (scoping) content from a Salesforce Lightning tab and populating it into the "content" field in add.html. Also processes and cleans up the scraped HTML.
+
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Get DOM refs
+
+  function removeDuplicateLineBreaks(html) {
+  // Replace 2+ consecutive <br>, possibly with whitespace, with a double <br> this gets the desired results
+  return html.replace(/(<br\s*\/?>\s*){2,}/gi, "<br><br>");
+}
   const contentEditableDiv = document.getElementById('content');
   const scopeBtn = document.getElementById('scopeBtn');
 
   // Auto-populate if session content exists and came from the shortcut
   const sessionContent = sessionStorage.getItem("scopedSalesforceContent");
   if (sessionContent && window.location.search.includes("scoped=1")) {
+    // Decodes and parses the scoped HTML content and injects it into the content field
     const data = JSON.parse(sessionContent);
     let rawInput = data.html;
     const parser = new DOMParser();
@@ -47,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
       br.parentNode.replaceChild(newBr, br);
     });
 
-    contentEditableDiv.innerHTML = contentDoc.body.innerHTML;
+    contentEditableDiv.innerHTML = removeDuplicateLineBreaks(contentDoc.body.innerHTML);
 
     
 
@@ -55,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if (!scopeBtn) return;
-
+  // ===== Scope Button Click Handler =====
+  // When clicked, attempts to scrape visible message content from a Salesforce Lightning tab and injects it into the content editor
   scopeBtn.addEventListener('click', async () => {
     scopeBtn.textContent = '⏳ Scoping...';
 
@@ -170,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
           br.parentNode.replaceChild(newBr, br);
         });
 
-        contentEditableDiv.innerHTML = contentDoc.body.innerHTML;
+        contentEditableDiv.innerHTML = removeDuplicateLineBreaks(contentDoc.body.innerHTML);
 
         
       } else {

@@ -1,9 +1,13 @@
-//This page controls how a response is added to the MongoDB via Node & HTTPS Requests
+// add.js
+// ---------
+// Purpose: Handles the add/edit/delete form logic for responses. Interacts with backend via HTTP requests to save, update, or delete entries from MongoDB.
 
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const entryId = urlParams.get("id");
   
+    // ===== Edit Mode =====
+    // If editing an existing entry, fetches the entry and populates the form fields
     if (entryId !== null) {
         // Edit Mode: Fetch the existing entry data
         fetch("http://localhost:3001/json")

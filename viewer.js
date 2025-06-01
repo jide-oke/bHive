@@ -1,4 +1,12 @@
+// viewer.js
+// ----------
+// Purpose: Handles the main UI/logic for displaying, filtering, and searching responses in the main bHive extension window.
+// Loads all responses, allows searching by content/tags, and triggers edit/add actions.
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
+  // DOM refs and main state
   const contentDiv = document.getElementById("content");
   const addButton = document.getElementById("add-button");
   const tagSearch = document.getElementById("tag-search");
@@ -6,14 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const contentSearch = document.getElementById("content-search");
 
   
-  // ADD Button
+  // ===== Add Button =====
+  // Navigates user to add.html for creating a new response
   addButton.addEventListener("click", () => {
     window.location.href = "add.html";
   });
 
-  // SCOPE SHORTCUT BUTTON LOGIC
+  // ===== Scope Shortcut Button and Keyboard Shortcut =====
+  // Handles scoping (scraping) Salesforce data into a new response
   const scopeShortcutBtn = document.getElementById("scope-shortcut");
-// Scope Shortcut
+// Keyboard shortcut: Ctrl+Shift+I triggers scope if available
 document.addEventListener("keydown", function (e) {
   if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'i') {
     if (scopeShortcutBtn && !scopeShortcutBtn.disabled) {
@@ -22,7 +32,7 @@ document.addEventListener("keydown", function (e) {
     }
   }
 });
-
+// Scope button click handler (Salesforce scraping logic)
   if (scopeShortcutBtn) {
     scopeShortcutBtn.addEventListener("click", async () => {
       scopeShortcutBtn.textContent = "⏳ Scoping...";
@@ -110,8 +120,9 @@ document.addEventListener("keydown", function (e) {
   }
 
   
-
+// ===== Utility: Formats markdown-style links and bold in content =====
   function formatText(text) {
+    // Converts [text](url) to clickable links and **bold** to <strong>
     const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\)]+|mailto:[^\)]+)\)/g;
     text = text.replace(linkRegex, (match, displayText, url) => {
       return `<a href="${url}" target="_blank">${displayText}</a>`;
@@ -124,7 +135,7 @@ document.addEventListener("keydown", function (e) {
 
     return text;
   }
-
+// ===== Render response entries to the UI =====
   function renderResponses(responses) {
     contentDiv.innerHTML = "";
 
@@ -158,8 +169,9 @@ document.addEventListener("keydown", function (e) {
         contentDiv.appendChild(entryDiv);
     });
   }
-
+// ===== Render tag sidebar with tag counts =====
   function renderTagList(responses) {
+    // Builds tag count sidebar; clicking tag filters results
     const tagListDiv = document.getElementById("tag-list");
     tagListDiv.innerHTML = "";
 
@@ -195,6 +207,7 @@ document.addEventListener("keydown", function (e) {
     });
   }
 
+// ===== Data loading: Fetch all responses from backend =====
   fetch("http://localhost:3001/json")
     .then((response) => response.json())
     .then((data) => {
@@ -214,10 +227,11 @@ document.addEventListener("keydown", function (e) {
       console.error("Error fetching JSON:", error);
       contentDiv.textContent = "Failed to load data.";
     });
-
+// ===== Filtering logic for tags and content =====
   tagSearch.addEventListener("input", filterAndRender);
 contentSearch.addEventListener("input", filterAndRender);
 
+// Filters responses by tag and content search fields, updates UI
 function filterAndRender() {
   const tagValue = tagSearch.value.trim().toLowerCase();
   const contentValue = contentSearch.value.trim().toLowerCase();
