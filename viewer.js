@@ -155,6 +155,47 @@ document.addEventListener("keydown", function (e) {
         tag.className = "tag";
         tag.textContent = `Tags: ${entry.tags ? entry.tags.join(", ") : "No Tags"}`;
 
+        const buttonRow = document.createElement("div");
+      buttonRow.style.marginTop = "10px";
+      buttonRow.style.display = "flex";
+      buttonRow.style.gap = "8px";
+      buttonRow.style.alignItems = "center";
+
+      // NEW: Plus counter and button
+      const plusesLabel = document.createElement("span");
+      plusesLabel.textContent = `+${entry.pluses || 0}`;
+      plusesLabel.style.fontWeight = "bold";
+      plusesLabel.style.marginRight = "3px";
+
+      const plusButton = document.createElement("button");
+      plusButton.textContent = "+1";
+      plusButton.title = "Give this response a plus!";
+      plusButton.style.background = "#ffca28";
+      plusButton.style.color = "#222";
+      plusButton.style.border = "none";
+      plusButton.style.padding = "5px 10px";
+      plusButton.style.borderRadius = "6px";
+      plusButton.style.fontWeight = "bold";
+      plusButton.style.cursor = "pointer";
+      plusButton.addEventListener("click", () => {
+        plusButton.disabled = true;
+        fetch(`http://localhost:3001/json/pluses`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: entry._id })
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            entry.pluses = (entry.pluses || 0) + 1;
+            plusesLabel.textContent = `+${entry.pluses}`;
+            plusButton.disabled = false;
+          })
+          .catch((err) => {
+            alert("Failed to add plus.");
+            plusButton.disabled = false;
+          });
+      });
+
         const editButton = document.createElement("button");
         editButton.textContent = "Edit";
         editButton.style.marginTop = "10px";
@@ -162,10 +203,14 @@ document.addEventListener("keydown", function (e) {
             window.location.href = `add.html?id=${entry._id}`;
         });
 
+        buttonRow.appendChild(plusesLabel);
+      buttonRow.appendChild(plusButton);
+      buttonRow.appendChild(editButton);
+
         entryDiv.appendChild(title);
         entryDiv.appendChild(content);
         entryDiv.appendChild(tag);
-        entryDiv.appendChild(editButton);
+        entryDiv.appendChild(buttonRow);
         contentDiv.appendChild(entryDiv);
     });
   }
