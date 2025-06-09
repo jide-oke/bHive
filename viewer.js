@@ -259,10 +259,15 @@ document.addEventListener("keydown", function (e) {
       allResponses = data.responses;
 
       allResponses.sort((a, b) => {
-        if (a._id < b._id) return 1;
-        if (a._id > b._id) return -1;
-        return 0;
-      });
+    const aPluses = typeof a.pluses === "number" ? a.pluses : 0;
+    const bPluses = typeof b.pluses === "number" ? b.pluses : 0;
+    if (bPluses !== aPluses) {
+      return bPluses - aPluses;
+    }
+    if (a._id < b._id) return 1;
+    if (a._id > b._id) return -1;
+    return 0;
+  });
 
       renderResponses(allResponses);
       renderTagList(allResponses);
