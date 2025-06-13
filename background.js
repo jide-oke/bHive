@@ -5,6 +5,12 @@
 
 let bhiveWindowId = null;
 
+chrome.storage.session.get('bhiveWindowId', ({ bhiveWindowId: storedId }) => {
+  if (storedId) {
+    bhiveWindowId = storedId;
+  }
+});
+
 chrome.action.onClicked.addListener(() => {
   // ===== Extension Icon Click Handler =====
   // Opens main extension window, or focuses it if already open 
@@ -35,9 +41,11 @@ function createBhiveWindow() {
     function (win) {
       bhiveWindowId = win.id;
       // Listen for window close event to reset window ID
+      chrome.storage.session.set({ bhiveWindowId: win.id });
       chrome.windows.onRemoved.addListener(function listener(closedId) {
         if (closedId === bhiveWindowId) {
           bhiveWindowId = null;
+          chrome.storage.session.remove('bhiveWindowId');
           chrome.windows.onRemoved.removeListener(listener);
         }
       });
