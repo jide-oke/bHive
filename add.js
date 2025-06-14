@@ -48,7 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
           .then(response => {
               if (response.ok) {
                   console.log('Entry updated successfully.');
-                  window.location.href = 'window.html';
+                  // After save or delete, return to window.html with a marker
+                  window.location.href = 'window.html?fromEdit=1'; 
               } else {
                   console.error('Failed to update entry.');
               }
@@ -66,7 +67,8 @@ document.addEventListener("DOMContentLoaded", function () {
           .then(response => {
               if (response.ok) {
                   console.log('New entry created successfully.');
-                  window.location.href = 'window.html';
+                  // After save or delete, return to window.html with a marker
+                  window.location.href = 'window.html?fromEdit=1';   
               } else {
                   console.error('Failed to create new entry.');
               }
@@ -91,7 +93,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(response => {
                 if (response.ok) {
                     console.log('Entry deleted successfully.');
-                    window.location.href = 'window.html'; // Go back to the main view
+                    // After save or delete, return to window.html with a marker
+                  window.location.href = 'window.html?fromEdit=1'; 
                 } else {
                     console.error('Failed to delete entry.');
                 }

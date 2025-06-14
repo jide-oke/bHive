@@ -13,6 +13,18 @@ document.addEventListener("DOMContentLoaded", () => {
   let allResponses = [];
   const contentSearch = document.getElementById("content-search");
 
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("fromEdit") === "1") {
+    const lastTag = sessionStorage.getItem("lastTagSearch") || "";
+    const lastContent = sessionStorage.getItem("lastContentSearch") || "";
+    tagSearch.value = lastTag;
+    contentSearch.value = lastContent;
+    filterAndRender();
+    // Optionally, clean up sessionStorage after restoring
+    sessionStorage.removeItem("lastTagSearch");
+    sessionStorage.removeItem("lastContentSearch");
+  }
+
   
   // ===== Add Button =====
   // Navigates user to add.html for creating a new response
@@ -200,6 +212,9 @@ document.addEventListener("keydown", function (e) {
         editButton.textContent = "Edit";
         editButton.style.marginTop = "10px";
         editButton.addEventListener("click", () => {
+          // Save current tag and content search before navigating to edit
+        sessionStorage.setItem("lastTagSearch", tagSearch.value);
+        sessionStorage.setItem("lastContentSearch", contentSearch.value);
             window.location.href = `add.html?id=${entry._id}`;
         });
 
