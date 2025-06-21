@@ -269,7 +269,7 @@ document.addEventListener("keydown", function (e) {
     return 0;
   });
 
-      renderResponses(allResponses);
+      filterAndRender();
       renderTagList(allResponses);
 
     })
