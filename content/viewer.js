@@ -182,7 +182,7 @@ document.addEventListener("keydown", function (e) {
       const plusButton = document.createElement("button");
       plusButton.textContent = "+1";
       plusButton.title = "Give this response a plus!";
-      plusButton.style.background = "#ffca28";
+      plusButton.style.background = "#28ffa9ff";
       plusButton.style.color = "#222";
       plusButton.style.border = "none";
       plusButton.style.padding = "5px 10px";
