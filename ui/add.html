@@ -4,6 +4,7 @@ add.html
 Purpose: The Add Response page. Responsible for displaying a form that allows users to create or edit a response entry (title, content, tags). Integrates with add.js for save/delete actions and scope.js for Salesforce content scraping.
 -->
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,8 +59,8 @@ Purpose: The Add Response page. Responsible for displaying a form that allows us
       <label for="content">Content:</label>
       <!-- Scope Salesforce button triggers scraping (see scope.js) -->
 <div style="margin-bottom:10px;">
-  <button type="button" id="scopeBtn" style="background:#4a90e2;color:#fff;padding:8px 16px;border:none;border-radius:6px;font-size:14px;cursor:pointer;">
-    Scope Salesforce
+  <button type="button" id="scopeBtn" style="background:#28ffa9ff;color:#000000;padding:8px 16px;border:none;border-radius:6px;font-size:14px;cursor:pointer;">
+    scope
   </button>
 </div>
       <div id="content" contenteditable="true" style="
@@ -79,11 +80,13 @@ Purpose: The Add Response page. Responsible for displaying a form that allows us
   <label for="tag">Tags (comma-separated):</label>
   <input type="text" id="tag" name="tag" placeholder="Enter tags (e.g., Support, Inquiry, General)" required />
   <small>Separate multiple tags with a comma</small>
+  <button type="button" id="suggest-tags-btn" style="background: #28ffa9ff; color: #000; border: none; border-radius: 6px; padding: 6px 12px; margin-left: 4px;">suggest</button>
 </div>
     <button type="submit">Save</button>
     <button type="button" id="delete-button" style="background-color: red; margin-left: 10px;">Delete</button>
   </form>
  <!-- Main logic in add.js and scope.js -->
+  <script src="../content/autotag.js"></script>
   <script src="../content/add.js"></script>
   <script src="../content/scope.js"></script>
 </body>

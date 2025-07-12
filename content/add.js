@@ -102,4 +102,34 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error('Error:', error));
         }
     });
+
+    fetchAllTags().then(allTags => {
+  return suggestTagsForContent(contentText, allTags);
+}).then(suggestedTags => {
+  document.getElementById("tag").value = suggestedTags.join(", ");
+});
+
+        const suggestBtn = document.getElementById("suggest-tags-btn");
+    if (suggestBtn) {
+        suggestBtn.addEventListener("click", async function () {
+    const contentDiv = document.getElementById("content");
+    const contentText = contentDiv ? contentDiv.innerText : "";
+
+    // 1. Fetch all tags
+    const allTags = await fetchAllTags();
+
+    // 2. Ask your server for suggested tags
+    suggestBtn.disabled = true;
+    suggestBtn.textContent = "Suggesting...";
+    try {
+        const suggestedTags = await suggestTagsForContent(contentText, allTags);
+        // 3. Fill the tag input with the suggested tags (comma separated)
+        document.getElementById("tag").value = suggestedTags.join(", ");
+    } catch (err) {
+        alert("Failed to get tag suggestions: " + (err.message || err));
+    }
+    suggestBtn.disabled = false;
+    suggestBtn.textContent = "Suggest";
+});
+    }
   });
