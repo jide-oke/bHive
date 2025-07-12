@@ -32,7 +32,7 @@ function createBhiveWindow() {
   // Opens the popup window for the extension and saves its window ID
   chrome.windows.create(
     {
-      url: "window.html",
+      url: "ui/window.html",
       type: "popup",
       focused: true,
       width: 800,

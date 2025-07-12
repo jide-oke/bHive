@@ -7,14 +7,14 @@
   "host_permissions": ["http://localhost:3001/*", "https://getclever.lightning.force.com/*"],
   "action": {
     "default_title": "Open Viewer",
-    "default_icon": "bee.png"
+    "default_icon": "current_images/icon.png"
   },
   "icons": {
-    "16": "bee.png",
-    "48": "bee.png",
-    "128": "bee.png"
+    "16": "current_images/icon.png",
+    "48": "current_images/icon.png",
+    "128": "current_images/icon.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background/background.js"
   }
 }
