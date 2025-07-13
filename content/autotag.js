@@ -1,10 +1,10 @@
-export async function fetchAllTags() {
+async function fetchAllTags() {
   const response = await fetch('http://localhost:3001/json/tags');
   const data = await response.json();
   return data.tags; // should be an array of all tags
 }
 
-export async function suggestTagsForContent(contentText, allTags) {
+async function suggestTagsForContent(contentText, allTags) {
   const response = await fetch('http://localhost:3001/suggest-tags', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
