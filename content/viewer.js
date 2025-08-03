@@ -222,6 +222,24 @@ document.addEventListener("keydown", function (e) {
       buttonRow.appendChild(plusButton);
       buttonRow.appendChild(editButton);
 
+      //Case PlaceHolder
+      const caseDiv = document.createElement("div");
+      caseDiv.className = "case-placeholder";
+      caseDiv.textContent = "case: "; // Placeholder text, can be updated later
+      caseDiv.style.position = "absolute";
+      caseDiv.style.top = "14px";
+      caseDiv.style.right = "26px";
+      caseDiv.style.color = "#ffe1f2";
+      caseDiv.style.fontWeight = "bold";
+      caseDiv.style.background = "rgba(40, 18, 60, 0.9)";
+      caseDiv.style.padding = "2px 12px";
+      caseDiv.style.borderRadius = "16px";
+      caseDiv.style.fontSize = "0.96rem";
+      caseDiv.style.boxShadow = "0 2px 8px #ff64c480";
+
+      // Make the parent .entry position: relative
+      entryDiv.style.position = "relative";
+      entryDiv.appendChild(caseDiv);
         entryDiv.appendChild(title);
         entryDiv.appendChild(content);
         entryDiv.appendChild(tag);
