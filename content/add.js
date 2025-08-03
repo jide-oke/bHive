@@ -104,13 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-
-    /*fetchAllTags().then(allTags => {
-  return suggestTagsForContent(contentText, allTags);
-}).then(suggestedTags => {
-  document.getElementById("tag").value = suggestedTags.join(", ");
-});*/
-
         const suggestBtn = document.getElementById("suggest-tags-btn");
     if (suggestBtn) {
         suggestBtn.addEventListener("click", async function () {
