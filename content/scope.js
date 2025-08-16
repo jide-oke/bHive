@@ -80,6 +80,11 @@ if (tagInput && !tagInput.value.trim()) {
   tagInput.value = 'Null';
 }
 
+const caseInput = document.getElementById('case-link');
+if (data.case && caseInput) {
+  caseInput.value = data.case;
+}
+
 // --- AUTO-SAVE SECTION ---
 const form = document.getElementById('add-response-form');
 if (form) {
@@ -165,8 +170,16 @@ if (form) {
       }
       const rawResult = results[0].result;
       if (rawResult && rawResult.startsWith('{')) {
+        // 1. Parse the scraped data
         const data = JSON.parse(rawResult);
 
+        const sessionData = {
+  ...data,
+  case: sfTab.url
+};
+sessionStorage.setItem("scopedSalesforceContent", JSON.stringify(sessionData));
+window.location.href = "add.html?scoped=1";
+        
         let rawInput = data.html;
         const parser = new DOMParser();
 

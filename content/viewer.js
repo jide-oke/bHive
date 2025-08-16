@@ -225,7 +225,13 @@ document.addEventListener("keydown", function (e) {
       //Case PlaceHolder
       const caseDiv = document.createElement("div");
       caseDiv.className = "case-placeholder";
-      caseDiv.textContent = "case: "; // Placeholder text, can be updated later
+
+      if (entry.case) {
+      caseDiv.innerHTML = 'case: <a href="' + entry.case + '" target="_blank" style="color:#28ffa9;text-decoration:underline;">link</a>';
+      } else {
+      caseDiv.textContent = "case: ";
+      }
+      
       caseDiv.style.position = "absolute";
       caseDiv.style.top = "14px";
       caseDiv.style.right = "26px";

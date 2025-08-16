@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
                      .filter(tag => tag !== ""); 
   
         const entryId = document.getElementById("entry-id").value;
+        const caseLink = document.getElementById('case-link').value || null;
+
   
         if (entryId) {
           // Update existing entry
@@ -43,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
               headers: {
                   'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ id: entryId, title, content, tags }),
+              body: JSON.stringify({ id: entryId, title, content, tags, case: caseLink }),
           })
           .then(response => {
               if (response.ok) {
@@ -62,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
               headers: {
                   'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ title, content, tags }),
+              body: JSON.stringify({ title, content, tags, case: caseLink  }),
           })
           .then(response => {
               if (response.ok) {
