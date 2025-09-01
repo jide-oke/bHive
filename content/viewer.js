@@ -1,3 +1,5 @@
+console.log ("test");
+
 // viewer.js
 // ----------
 // Purpose: Handles the main UI/logic for displaying, filtering, and searching responses in the main bHive extension window.
@@ -59,6 +61,8 @@ document.addEventListener("keydown", function (e) {
         scopeShortcutBtn.textContent = "Scope";
         return;
       }
+
+      console.log("SF tab URL:", sfTab.url);
 
       await chrome.tabs.update(sfTab.id, { active: true });
 
@@ -130,6 +134,7 @@ document.addEventListener("keydown", function (e) {
       });
     });
   }
+
 
   
 // ===== Utility: Formats markdown-style links and bold in content =====

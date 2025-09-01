@@ -1,3 +1,4 @@
+
 // scope.js
 // ----------
 // Purpose: Handles scraping (scoping) content from a Salesforce Lightning tab and populating it into the "content" field in add.html. Also processes and cleans up the scraped HTML.
@@ -176,7 +177,11 @@ if (form) {
         const sessionData = {
   ...data,
   case: sfTab.url
+
+  
 };
+
+
 sessionStorage.setItem("scopedSalesforceContent", JSON.stringify(sessionData));
 window.location.href = "add.html?scoped=1";
         
