@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const tagSearch = document.getElementById("tag-search");
   let allResponses = [];
   const contentSearch = document.getElementById("content-search");
+  const EXPLOSION_PATH = "../current_images/explosion.gif";
+  // Preload (so it shows instantly on first click)
+const _preloadExplosion = new Image();
+_preloadExplosion.src = EXPLOSION_PATH;
 
   const params = new URLSearchParams(window.location.search);
   if (params.get("fromEdit") === "1") {
@@ -257,7 +261,31 @@ document.addEventListener("keydown", function (e) {
         entryDiv.appendChild(buttonRow);
         contentDiv.appendChild(entryDiv);
 
-        // --- helpers (place these inside renderResponses, before the click handler) ---
+      function showExplosion(evt) {
+  // Create a fresh <img> so the GIF restarts each time (use cache-busting)
+  const img = new Image();
+  img.src = EXPLOSION_PATH + "?" + Date.now();  // force replay
+  img.alt = "";
+  img.style.position = "fixed";
+  img.style.left = `${evt.clientX}px`;
+  img.style.top = `${evt.clientY}px`;
+  img.style.transform = "translate(-50%, -50%)";
+  img.style.width = "140px";         // tweak to taste
+  img.style.height = "140px";
+  img.style.pointerEvents = "none";
+  img.style.zIndex = "999999";
+  img.style.opacity = "1";
+  img.style.transition = "opacity 180ms ease-out";
+
+  document.body.appendChild(img);
+
+  // quick fade & remove
+  setTimeout(() => { img.style.opacity = "0"; }, 380);
+  setTimeout(() => { img.remove(); }, 600);
+}  
+
+        
+// --- helpers (place these inside renderResponses, before the click handler) ---
 
 // returns { plain, html } with signature removed if a valediction is found near the end
 function stripSignatureFromRendered(contentEl) {
@@ -316,26 +344,34 @@ entryDiv.addEventListener("click", async (e) => {
   // Don’t trigger when clicking +1, Edit, or links
   if (e.target.closest('button') || e.target.closest('a')) return;
 
-  // 1) Strip signature from the rendered node
-  const { plain, html } = stripSignatureFromRendered(content);
+  // 1) Strip signature from the rendered node (your helper from earlier)
+ // 1) Strip signature from the rendered node (plain text only)
+const { plain } = stripSignatureFromRendered(content);
+
+// 2) Re-generate formatted HTML from the *source* content
+//    (this ensures links and bold show up, just like in the viewer)
+const formattedHtml = formatText(entry.content);
 
   // 2) Copy (prefer rich HTML; fallback to plaintext)
   try {
-    if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
-      const item = new ClipboardItem({
-        'text/html': new Blob([html],  { type: 'text/html' }),
-        'text/plain': new Blob([plain], { type: 'text/plain' })
-      });
-      await navigator.clipboard.write([item]);
-    } else {
-      await navigator.clipboard.writeText(plain);
-    }
+if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+  const item = new ClipboardItem({
+    'text/html': new Blob([formattedHtml], { type: 'text/html' }),
+    'text/plain': new Blob([plain], { type: 'text/plain' })
+  });
+  await navigator.clipboard.write([item]);
+} else {
+  await navigator.clipboard.writeText(plain);
+}
   } catch (err) {
     console.error('Clipboard failed:', err);
     try { await navigator.clipboard.writeText(plain); } catch {}
   }
 
-  // 3) Upvote (same as your +1 button)
+  // 3) Fire the explosion confirmation at the click point
+  showExplosion(e);
+
+  // 4) Upvote (same endpoint you already use for the +1 button)
   try {
     await fetch(`http://localhost:3001/json/pluses`, {
       method: "POST",
