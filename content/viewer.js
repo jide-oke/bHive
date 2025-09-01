@@ -256,6 +256,99 @@ document.addEventListener("keydown", function (e) {
         entryDiv.appendChild(tag);
         entryDiv.appendChild(buttonRow);
         contentDiv.appendChild(entryDiv);
+
+        // --- helpers (place these inside renderResponses, before the click handler) ---
+
+// returns { plain, html } with signature removed if a valediction is found near the end
+function stripSignatureFromRendered(contentEl) {
+  const valedictionRe = /^(kind regards|best regards|best|thanks|thank you|sincerely|warmly|cheers)[\s,!.-]*$/i;
+
+  // Split by visual lines from the rendered node
+  const lines = contentEl.innerText
+    .replace(/\u00A0/g, ' ')   // normalize nbsp
+    .split(/\r?\n/);
+
+  // Walk upward from the bottom, find a valediction line near the end (within last ~8 non-empty lines)
+  const lastNonEmptyIdx = (() => {
+    for (let i = lines.length - 1; i >= 0; i--) {
+      if (lines[i].trim() !== '') return i;
+    }
+    return -1;
+  })();
+
+  // If nothing meaningful, just return current text/html
+  if (lastNonEmptyIdx === -1) {
+    return {
+      plain: contentEl.innerText.replace(/\u00A0/g, ' '),
+      html: contentEl.innerHTML
+    };
+  }
+
+  // Search for a valediction line in the last N lines (N=8 is a good heuristic)
+  const WINDOW = 8;
+  let cutAt = -1;
+  for (let i = lastNonEmptyIdx; i >= Math.max(0, lastNonEmptyIdx - WINDOW + 1); i--) {
+    if (valedictionRe.test(lines[i].trim())) {
+      cutAt = i; // cut starting at the valediction line
+      break;
+    }
+  }
+
+  if (cutAt === -1) {
+    // No valediction found near the end -> return original
+    return {
+      plain: contentEl.innerText.replace(/\u00A0/g, ' '),
+      html: contentEl.innerHTML
+    };
+  }
+
+  // Build plaintext without signature
+  const plainNoSig = lines.slice(0, cutAt).join('\n').replace(/\s+$/,''); // trim trailing
+
+  // For HTML, simplest safe approach is to mirror the plaintext with <br> so you don't copy the signature.
+  // (If you need to preserve links/bold exactly, I can share a DOM-pruning variant.)
+  const htmlNoSig = plainNoSig.split('\n').map(l => l === '' ? '<br>' : l).join('\n');
+
+  return { plain: plainNoSig, html: htmlNoSig };
+}
+
+entryDiv.addEventListener("click", async (e) => {
+  // Don’t trigger when clicking +1, Edit, or links
+  if (e.target.closest('button') || e.target.closest('a')) return;
+
+  // 1) Strip signature from the rendered node
+  const { plain, html } = stripSignatureFromRendered(content);
+
+  // 2) Copy (prefer rich HTML; fallback to plaintext)
+  try {
+    if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+      const item = new ClipboardItem({
+        'text/html': new Blob([html],  { type: 'text/html' }),
+        'text/plain': new Blob([plain], { type: 'text/plain' })
+      });
+      await navigator.clipboard.write([item]);
+    } else {
+      await navigator.clipboard.writeText(plain);
+    }
+  } catch (err) {
+    console.error('Clipboard failed:', err);
+    try { await navigator.clipboard.writeText(plain); } catch {}
+  }
+
+  // 3) Upvote (same as your +1 button)
+  try {
+    await fetch(`http://localhost:3001/json/pluses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: entry._id })
+    });
+    entry.pluses = (entry.pluses || 0) + 1;
+    plusesLabel.textContent = `+${entry.pluses}`;
+  } catch (err) {
+    console.error("Failed to upvote:", err);
+  }
+});
+
     });
   }
 // ===== Render tag sidebar with tag counts =====
