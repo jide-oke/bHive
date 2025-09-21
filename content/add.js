@@ -107,7 +107,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
+    // ===== Tag Suggestion Button =====
+    // Handles automatic tag suggestion for the content
         const suggestBtn = document.getElementById("suggest-tags-btn");
     if (suggestBtn) {
         suggestBtn.addEventListener("click", async function () {
