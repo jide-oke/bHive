@@ -7,6 +7,18 @@
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const entryId = urlParams.get("id");
+    const isNullMode = urlParams.get("nullMode") === "1";
+
+    function redirectAfterChange(entryIdForLoop) {
+  if (isNullMode && entryIdForLoop) {
+    // Let viewer.js know which Null entry we just handled
+    sessionStorage.setItem("nullModeActive", "1");
+    sessionStorage.setItem("lastNullId", entryIdForLoop);
+    window.location.href = "window.html?fromNullEdit=1";
+  } else {
+    window.location.href = "window.html?fromEdit=1";
+  }
+}
   
     // ===== Edit Mode =====
     // If editing an existing entry, fetches the entry and populates the form fields
@@ -50,14 +62,14 @@ document.addEventListener("DOMContentLoaded", function () {
               body: JSON.stringify({ id: entryId, title, content, tags, case: caseLink }),
           })
           .then(response => {
-              if (response.ok) {
-                  console.log('Entry updated successfully.');
-                  // After save or delete, return to window.html with a marker
-                  window.location.href = 'window.html?fromEdit=1'; 
-              } else {
-                  console.error('Failed to update entry.');
-              }
-          })
+  if (response.ok) {
+    console.log('Entry updated successfully.');
+    // After save or delete, return to window.html with a marker
+    redirectAfterChange(entryId);
+  } else {
+    console.error('Failed to update entry.');
+  }
+})
           .catch(error => console.error('Error:', error));
       } else {
           // Create new entry
@@ -72,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
               if (response.ok) {
                   console.log('New entry created successfully.');
                   // After save or delete, return to window.html with a marker
-                  window.location.href = 'window.html?fromEdit=1';   
+                  redirectAfterChange(null); 
               } else {
                   console.error('Failed to create new entry.');
               }
@@ -98,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.ok) {
                     console.log('Entry deleted successfully.');
                     // After save or delete, return to window.html with a marker
-                  window.location.href = 'window.html?fromEdit=1'; 
+                  redirectAfterChange(null); 
                 } else {
                     console.error('Failed to delete entry.');
                 }

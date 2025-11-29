@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let allResponses = [];
   const contentSearch = document.getElementById("content-search");
   const EXPLOSION_PATH = "../current_images/explosion.gif";
+  // NEW: Null mode button reference
+const nullModeButton = document.getElementById("null-mode-button");
   // Preload (so it shows instantly on first click)
 const _preloadExplosion = new Image();
 _preloadExplosion.src = EXPLOSION_PATH;
@@ -425,31 +427,105 @@ if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
     });
   }
 
-// ===== Data loading: Fetch all responses from backend =====
-  fetch("http://localhost:3001/json")
-    .then((response) => response.json())
-    .then((data) => {
-      allResponses = data.responses;
+  //Logic for Null Mode
 
-      allResponses.sort((a, b) => {
-    const aPluses = typeof a.pluses === "number" ? a.pluses : 0;
-    const bPluses = typeof b.pluses === "number" ? b.pluses : 0;
-    if (bPluses !== aPluses) {
-      return bPluses - aPluses;
-    }
+// Returns true if entry has a "Null" tag (case-insensitive)
+function hasNullTag(entry) {
+  if (!entry.tags || !Array.isArray(entry.tags)) return false;
+  return entry.tags.some(
+    (t) => t && t.toLowerCase() === "null"
+  );
+}
+
+// Find the "next" Null entry, ordered by most recent _id
+// lastId: if provided, we skip everything at/after that id
+function getNextNullResponse(lastId) {
+  if (!allResponses || allResponses.length === 0) return null;
+
+  // Sort by _id descending (newest-ish first, given Mongo ObjectId)
+  const sorted = [...allResponses].sort((a, b) => {
     if (a._id < b._id) return 1;
     if (a._id > b._id) return -1;
     return 0;
   });
 
-      filterAndRender();
-      renderTagList(allResponses);
+  // If no lastId, just return the newest Null-tagged entry
+  if (!lastId) {
+    return sorted.find((entry) => hasNullTag(entry)) || null;
+  }
 
-    })
-    .catch((error) => {
-      console.error("Error fetching JSON:", error);
-      contentDiv.textContent = "Failed to load data.";
+  // Otherwise, find index of the last processed one and look after it
+  const startIdx = sorted.findIndex((e) => e._id === lastId);
+  for (let i = (startIdx === -1 ? 0 : startIdx + 1); i < sorted.length; i++) {
+    if (hasNullTag(sorted[i])) return sorted[i];
+  }
+  return null; // nothing left
+}
+//**
+
+// ===== Data loading: Fetch all responses from backend =====
+ fetch("http://localhost:3001/json")
+  .then((response) => response.json())
+  .then((data) => {
+    allResponses = data.responses;
+
+    // Existing sort (pluses then _id)
+    allResponses.sort((a, b) => {
+      const aPluses = typeof a.pluses === "number" ? a.pluses : 0;
+      const bPluses = typeof b.pluses === "number" ? b.pluses : 0;
+      if (bPluses !== aPluses) {
+        return bPluses - aPluses;
+      }
+      if (a._id < b._id) return 1;
+      if (a._id > b._id) return -1;
+      return 0;
     });
+
+    // === Null mode: start workflow from button ===
+    if (nullModeButton) {
+      nullModeButton.addEventListener("click", () => {
+        const next = getNextNullResponse(null);
+        if (!next) {
+          alert("No responses tagged 'Null' found.");
+          sessionStorage.removeItem("nullModeActive");
+          sessionStorage.removeItem("lastNullId");
+          return;
+        }
+
+        // Mark Null mode as active
+        sessionStorage.setItem("nullModeActive", "1");
+        // We only mark lastNullId AFTER saving, in add.js
+
+        window.location.href = `add.html?id=${next._id}&nullMode=1`;
+      });
+    }
+
+    // === Null mode: we just came back from editing one ===
+    const params = new URLSearchParams(window.location.search);
+    if (
+      params.get("fromNullEdit") === "1" &&
+      sessionStorage.getItem("nullModeActive") === "1"
+    ) {
+      const lastId = sessionStorage.getItem("lastNullId");
+      const next = getNextNullResponse(lastId);
+      if (next) {
+        window.location.href = `add.html?id=${next._id}&nullMode=1`;
+        return; // Don't bother rendering the list right now
+      } else {
+        alert("You're all caught up — no more 'Null' tagged responses.");
+        sessionStorage.removeItem("nullModeActive");
+        sessionStorage.removeItem("lastNullId");
+      }
+    }
+
+    // Normal render
+    filterAndRender();
+    renderTagList(allResponses);
+  })
+  .catch((error) => {
+    console.error("Error fetching JSON:", error);
+    contentDiv.textContent = "Failed to load data.";
+  });
 // ===== Filtering logic for tags and content =====
   tagSearch.addEventListener("input", filterAndRender);
 contentSearch.addEventListener("input", filterAndRender);
