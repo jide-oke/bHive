@@ -1,193 +1,408 @@
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>	(ﾉ◕ヮ◕)ﾉ ✧ Plus 1000 ✧ ٩(◕‿◕)۶ </title>
-<style>
-body {
-  font-family: 'Montserrat', 'Press Start 2P', Arial, sans-serif;
-  background: #14151a;
-  color: #f5f5f7;
-  margin: 0;
-  display: flex;
-  height: 100vh;
-}
-.sidebar {
-  width: 90px;
-  background: #faf7fa;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 16px;
-  border-right: 2px solid #ffd6ec;
-  box-shadow: 4px 0 24px 0 #ffe1f2;
-}
-#add-button {
-  background: #ff64c4;
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  padding: 13px 0;
-  border-radius: 18px;
-  width: 48px;
-  font-size: 28px;
-  margin: 12px 0;
-  box-shadow: 0 2px 8px #ffd6ec60;
-  transition: background 0.15s;
-}
-#add-button:hover {
-  background: #f92b9a;
+  <meta charset="UTF-8" />
+  <title>✧ Plus 1k ✧ ٩(◕‿◕)۶</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff64c4;
+      --pink-soft: #ffd6ec;
+      --bg-dark: #14151a;
+      --bg-card: #2a2932;
+      --accent-mint: #28ffa9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #ffb9e4 0, #14151a 44%, #121218 100%);
+      color: #f5f5f7;
+      height: 100vh;
+      display: flex;
+    }
+
+    .app {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, #fff7fc 0%, #ffe1f2 40%, #fef5ff 100%);
+      border-right: 2px solid var(--pink-soft);
+      box-shadow: 4px 0 24px rgba(255, 143, 210, 0.55);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .frog-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 6px;
+    }
+
+    .frog-wrapper img {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+      cursor: pointer;
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    .frog-wrapper img:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+    }
+
+    .app-title {
+      font-family: "Press Start 2P", monospace;
+      font-size: 0.62rem;
+      text-align: center;
+      color: #e90063;
+      text-shadow: 0 1px 0 #fff, 0 0 8px rgba(255, 86, 182, 0.6);
+    }
+
+    .search-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .search-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #b7004f;
+      font-weight: 700;
+    }
+
+    .search-input {
+      border-radius: 999px;
+      border: 1.6px solid var(--pink-soft);
+      padding: 7px 12px;
+      font-size: 0.83rem;
+      outline: none;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(255, 214, 236, 0.9);
+    }
+
+    .search-input:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 2px rgba(255, 100, 196, 0.3);
+    }
+
+    .sidebar-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 90ms ease, box-shadow 90ms ease, background 120ms ease, color 120ms ease;
+    }
+
+    .btn-primary {
+      background: var(--pink);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 100, 196, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(255, 100, 196, 0.85);
+      background: #f92b9a;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #e90063;
+      border: 1.5px solid var(--pink-soft);
+    }
+
+    .btn-outline:hover {
+      background: #ffe9f6;
+      transform: translateY(-2px);
+    }
+
+    .btn-danger-chip {
+      background: #ffe9f0;
+      color: #b1002f;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      padding-block: 5px;
+      box-shadow: 0 0 0 transparent;
+    }
+
+    .btn-danger-chip:hover {
+      background: #ffb1c5;
+    }
+
+    .btn-danger-chip.active {
+      background: #ff3c64;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(255, 60, 100, 0.8);
+    }
+
+    .tag-sidebar {
+      flex: 1;
+      overflow-y: auto;
+      border-radius: 14px;
+      background: #fff7fd;
+      padding: 10px;
+      box-shadow: inset 0 0 0 1px rgba(255, 214, 236, 0.8);
+    }
+
+    .tag-sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #b7004f;
+      cursor: default;
+    }
+
+    #tag-list {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #d30052;
+    }
+
+    #tag-list > div {
+      border-radius: 999px;
+      margin-bottom: 4px;
+      background: #ffe0f6;
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      padding: 20px 28px;
+      overflow-y: auto;
+      position: relative;
+      background: radial-gradient(circle at top left, rgba(255, 138, 210, 0.25), transparent 55%), #ffffff;
+    }
+
+    .main-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .main-title {
+      font-family: "Press Start 2P", monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffe1f2;
+      text-shadow: 0 1px 0 #ff2a9c, 0 2px 10px rgba(255, 96, 193, 0.8);
+    }
+
+    .main-subtitle {
+      font-size: 0.8rem;
+      color: #c0becb;
+    }
+
+    .hotkeys-hint {
+      font-size: 0.7rem;
+      color: #9f9bb0;
+      margin-top: 6px;
+      text-align: right;
+    }
+
+    /* Content container for viewer.js */
+    #content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ENTRY styling */
+
+    .entry {
+      position: relative;
+      background: radial-gradient(circle at top left, rgba(255, 138, 210, 0.13), transparent 50%) #44424d;
+      border-radius: 22px;
+      padding: 16px 18px 14px;
+      border: 2px solid rgba(255, 214, 236, 0.7);
+      box-shadow: 0 4px 26px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: transform 110ms ease, box-shadow 110ms ease, border-color 120ms ease;
+    }
+
+    .entry:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 8px 32px rgba(255, 144, 218, 0.6);
+      border-color: var(--pink);
+    }
+
+    .entry .title {
+      font-family: "Press Start 2P", monospace;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #f0d1e4;
+      margin-bottom: 6px;
+
+      /* ✨ Neon Glow Effect */
+  text-shadow:
+    0 1px 0 #ff2a9c,
+    0 0 6px #ff64c4,
+    0 0 12px rgba(255, 96, 193, 0.8),
+    0 0 20px rgba(255, 96, 193, 0.55);
+    }
+
+    /* CHANGED: show full response text, no fade or clamp */
+    .entry .content {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+             Helvetica, Arial, sans-serif;
+      font-size: 1.5rem;
+      color: #f6f6ff;
+      opacity: 0.96;
+      line-height: 1.45;
+      margin-bottom: 6px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Removed the ::after fade entirely */
+
+    .entry .tag {
+      font-size: 0.78rem;
+      color: #ffd6ec;
+      margin-bottom: 6px;
+    }
+
+    /*.entry .case-placeholder {
+      border-radius: 999px;
+    }*/
+
+    /* Button row from viewer.js */
+    /* Make the +1 button hug the plusses badge */
+.entry div[style*="display: flex"] {
+  justify-content: flex-start !important; /* Prevent spacing out */
+  gap: 8px !important;
+  font-size: 0.78rem;
+  color: #c7c3d6;
 }
 
-#scope-shortcut {
-  background: #ff64c4;
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  padding: 6px 11px;
-  margin-bottom: 14px;
-  font-size: 14px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px #ffd6ec60;
-  transition: background 0.15s;
-}
-#scope-shortcut:hover {
-  background: #f92b9a;
+/* Ensure Edit goes to the right instead */
+.entry div[style*="display: flex"] button:last-of-type {
+  margin-left: auto !important; /* Push Edit to far right */
 }
 
-.sidebar input {
-  width: 73%;
-  padding: 6px;
-  margin-bottom: 10px;
-  border: 1.5px solid #ffd6ec;
-  border-radius: 8px;
-  font-size: 13px;
-  background: #fff;
-}
+    .entry button {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 214, 236, 0.7);
+      padding: 4px 12px;
+      background: transparent;
+      color: #ffe1f2;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      box-shadow: none;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.1s, color 0.15s, border-color 0.15s;
+      margin-top: 0;
+    }
 
-#tag-list {
-  margin-top: 18px;
-  width: 96%;
-  font-size: 12.5px;
-  color: #f92b9a;
-  font-family: 'Press Start 2P', 'Montserrat', Arial, sans-serif;
-  padding-bottom: 40px;
-}
+    .entry button:first-of-type {
+      background: var(--accent-mint);
+      color: #111;
+      border-color: rgba(40, 255, 169, 0.7);
+      box-shadow: 0 3px 10px rgba(40, 255, 169, 0.5);
+      padding-inline: 10px;
+    }
 
-.content-container {
-  margin-left: 1px;
-  padding: 22px 30px 22px 30px;
-  flex-grow: 1;
-  overflow-y: auto;
-  background: linear-gradient(135deg, #181920 60%, #ffe1f2 100%);
-}
+    .entry button:first-of-type:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(40, 255, 169, 0.7);
+    }
 
-.entry {
-  background: #4e4e51;
-  color: #f5f5f7;
-  border-radius: 22px;
-  box-shadow: 0 2px 18px #ffd6ec60;
-  padding: 21px 23px 16px 23px;
-  margin-bottom: 22px;
-  transition: transform 0.12s, box-shadow 0.12s;
-  border: 2px solid #ffd6ec;
-  cursor: pointer;
-}
-.entry:hover {
-  transform: scale(1.025) translateY(-3px);
-  box-shadow: 0 6px 36px #ff9edab5;
-  border-color: #ff64c4;
-}
-.title {
-  font-family: 'Press Start 2P', 'Montserrat', Arial, sans-serif;
-  font-size: 1.23rem;
-  color: #ff64c4;
-  margin-bottom: 7px;
-  text-shadow: 0 1px 0 #ffd6ec, 0 2px 5px #fff3f6;
-}
-.content {
-  font-size: 1.05rem;
-  color: #f5f5f7;
-  margin-bottom: 7px;
-}
-.tag {
-  font-size: 0.95rem;
-  color: #e90063;
-  margin-bottom: 0;
-}
-button {
-  background: #ffe1f2;
-  color: #e90063;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 17px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  margin-right: 7px;
-  margin-top: 2px;
-  transition: background 0.15s, color 0.12s;
-}
-button:hover {
-  background: #ff64c4;
-  color: #fff;
-}
-
-
-</style>
+    .entry button:nth-of-type(2):hover {
+      background: rgba(255, 214, 236, 0.14);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.5);
+    }
+  </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Tag Search Input -->
-       <img src="../current_images/home_gif.gif" alt="Frog" style="width:60px; margin-bottom:12px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.10);" />
-      <input type="text" id="tag-search" placeholder="search tags :D" style="
-        width: 70%;
-        padding: 5px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        text-align: center;
-      " />
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="frog-wrapper">
+        <img src="../current_images/home_gif.gif" alt="Frog listening to music" />
+        <div class="app-title">
+          ٩(◕‿◕)۶
+        </div>
+      </div>
 
-      <input type="text" id="content-search" placeholder="search content :D" style="
-  width: 70%;
-  padding: 5px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  text-align: center;
-" />
-  
-      <button id="add-button">+</button>
-      <!-- NEW SCOPE SHORTCUT BUTTON -->
-      <button id="scope-shortcut">scope</button>
+      <div class="search-group">
+        <div class="search-label">Search</div>
+        <input id="tag-search" class="search-input" placeholder="search tags :D" />
+        <input id="content-search" class="search-input" placeholder="search content :D" />
+      </div>
 
-      
-<!-- NEW: Null mode button -->
-<button id="null-mode-button">Null mode</button>
+      <div class="sidebar-buttons">
+        <button id="add-button" class="btn btn-primary" type="button">
+          ✚ new response
+        </button>
+        <button id="scope-shortcut" class="btn btn-outline" type="button">
+          scope from SF
+        </button>
+        <button id="null-mode-button" class="btn btn-danger-chip" type="button">
+          Null mode
+        </button>
+      </div>
 
-<div id="tag-list" style="
-    width: 100%;
-    text-align: left;
-    padding: 10px;
-    font-size: 14px;
-"></div>
+      <div class="tag-sidebar">
+        <div class="tag-sidebar-header">
+          <span>Top tags</span>
+          <span>▼</span>
+        </div>
+        <div id="tag-list"></div>
+      </div>
+    </aside>
 
-      <div id="tag-list" style="
-    width: 100%;
-    text-align: left;
-    padding: 10px;
-    font-size: 14px;
-  "></div>
-    </div>
+    <!-- MAIN -->
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <div class="main-title">✧ Plus 1k ✧</div>
+          <div class="main-subtitle">Powered by your local JSON server</div>
+        </div>
+        <div class="hotkeys-hint">
+          Click card to copy & auto +1
+        </div>
+      </header>
 
-  <!-- Main content -->
-  <div class="content-container" id="content"></div>
+      <section id="content"></section>
+    </main>
+  </div>
+
   <script src="../content/viewer.js"></script>
 </body>
 </html>
