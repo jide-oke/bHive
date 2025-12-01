@@ -538,10 +538,23 @@ function filterAndRender() {
   let filtered = allResponses;
 
   if (tagValue !== "") {
-    const searchTags = tagValue.split(",").map(tag => tag.trim().toLowerCase());
-    filtered = filtered.filter(entry =>
-      entry.tags && entry.tags.some(tag => searchTags.includes(tag.toLowerCase()))
-    );
+    // Split on commas, trim, lowercase, and drop empties
+    const searchTags = tagValue
+      .split(",")
+      .map(tag => tag.trim().toLowerCase())
+      .filter(tag => tag.length > 0);
+
+    filtered = filtered.filter(entry => {
+      if (!entry.tags || !Array.isArray(entry.tags) || entry.tags.length === 0) {
+        return false;
+      }
+
+      // Normalize entry tags once
+      const entryTagsLower = entry.tags.map(t => t.toLowerCase());
+
+      // AND logic: every searchTag must be present in entryTagsLower
+      return searchTags.every(st => entryTagsLower.includes(st));
+    });
   }
 
   if (contentValue !== "") {
